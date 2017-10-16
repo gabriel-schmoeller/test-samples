@@ -1,6 +1,7 @@
 package gabriel.schmoeller.app.sample.persistence;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,5 +47,29 @@ public class SampleEntity {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SampleEntity entity = (SampleEntity) o;
+        return Objects.equals(id, entity.id)
+                && Objects.equals(name, entity.name)
+                && Objects.equals(date, entity.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, date);
+    }
+
+    @Override
+    public String toString() {
+        return "SampleEntity{"
+                + "id=" + id
+                + ", name='" + name + '\''
+                + ", date=" + date
+                + '}';
     }
 }

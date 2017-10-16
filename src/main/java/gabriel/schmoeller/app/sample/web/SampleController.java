@@ -2,9 +2,12 @@ package gabriel.schmoeller.app.sample.web;
 
 import gabriel.schmoeller.app.sample.business.SampleService;
 import gabriel.schmoeller.app.sample.persistence.SampleEntity;
+import gabriel.schmoeller.app.sample.web.converter.SampleConverter;
+import gabriel.schmoeller.app.sample.web.domain.SampleViewBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,28 +20,35 @@ import java.util.UUID;
 public class SampleController {
 
     private final SampleService service;
+    private final SampleConverter converter;
 
     @Autowired
-    public SampleController(SampleService service) {
+    public SampleController(SampleService service, SampleConverter converter) {
         this.service = service;
+        this.converter = converter;
     }
 
     @GetMapping
-    public List<SampleEntity> listThings() {
-        return service.listSamples();
+    public List<SampleViewBean> listThings() {
+        return converter.encodeAll(service.listSamples());
     }
 
     @GetMapping("random")
-    public SampleEntity createRandom() {
+    public SampleViewBean createRandom() {
         SampleEntity random = new SampleEntity();
         random.setName(UUID.randomUUID().toString());
         random.setDate(LocalDateTime.now());
 
-        return service.create(random);
+        return converter.encode(service.create(random));
     }
 
     @PostMapping
-    public void createThings(SampleEntity entity) {
+    public void createThings(SampleViewBean viewBean) {
+        service.create(converter.dencode(viewBean));
+    }
 
+    @PutMapping
+    public void updateThings(SampleViewBean viewBean) {
+        service.create(converter.dencode(viewBean));
     }
 }

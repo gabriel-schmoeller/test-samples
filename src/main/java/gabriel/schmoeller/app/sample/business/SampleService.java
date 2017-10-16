@@ -1,5 +1,6 @@
 package gabriel.schmoeller.app.sample.business;
 
+import gabriel.schmoeller.app.sample.business.validation.SampleValidationSuite;
 import gabriel.schmoeller.app.sample.persistence.SampleEntity;
 import gabriel.schmoeller.app.sample.persistence.SampleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,10 @@ import java.util.List;
 public class SampleService {
 
     private final SampleRepository repository;
-    private final SampleValidator validator;
+    private final SampleValidationSuite validator;
 
     @Autowired
-    public SampleService(SampleRepository repository, SampleValidator validator) {
+    public SampleService(SampleRepository repository, SampleValidationSuite validator) {
         this.repository = repository;
         this.validator = validator;
     }
@@ -29,6 +30,12 @@ public class SampleService {
     }
 
     public SampleEntity create(SampleEntity entity) {
+        validator.validateToCreate();
+        return repository.save(entity);
+    }
+
+    public SampleEntity update(SampleEntity entity) {
+        validator.validateToUpdate();
         return repository.save(entity);
     }
 }
