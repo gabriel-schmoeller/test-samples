@@ -30,12 +30,12 @@ public class SampleService {
     }
 
     public SampleEntity create(SampleEntity entity) {
-        validator.validateToCreate();
+        validator.validateToCreate(entity);
         return repository.save(entity);
     }
 
     public SampleEntity update(SampleEntity entity) {
-        validator.validateToUpdate();
+        validator.validateToUpdate(entity);
         return repository.save(entity);
     }
 }

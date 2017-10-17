@@ -10,4 +10,8 @@ public class ValidationException extends RuntimeException {
         super(message);
         this.violationMessages = violationMessages;
     }
+
+    public List<String> getViolationMessages() {
+        return violationMessages;
+    }
 }
