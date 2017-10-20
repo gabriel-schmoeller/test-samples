@@ -1,6 +1,7 @@
 package gabriel.schmoeller.app.sample.web.domain;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class SampleViewBean {
 
@@ -30,5 +31,29 @@ public class SampleViewBean {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SampleViewBean viewBean = (SampleViewBean) o;
+        return Objects.equals(id, viewBean.id)
+                && Objects.equals(name, viewBean.name)
+                && Objects.equals(date, viewBean.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, date);
+    }
+
+    @Override
+    public String toString() {
+        return "SampleViewBean{"
+                + "id=" + id
+                + ", name='" + name + '\''
+                + ", date=" + date
+                + '}';
     }
 }

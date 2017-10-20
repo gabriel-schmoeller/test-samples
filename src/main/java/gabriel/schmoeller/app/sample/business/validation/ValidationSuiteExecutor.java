@@ -18,6 +18,8 @@ public class ValidationSuiteExecutor {
                 .map(Optional::get)
                 .collect(Collectors.toList());
 
-        throw new ValidationException(violationMessage, violations);
+        if (!violations.isEmpty()) {
+            throw new ValidationException(violationMessage, violations);
+        }
     }
 }

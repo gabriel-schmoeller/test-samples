@@ -5,7 +5,7 @@ import gabriel.schmoeller.app.sample.persistence.SampleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 
 @Component
@@ -20,10 +20,10 @@ public class SampleDateValidator implements ValidationUnit {
 
     @Override
     public Optional<String> validate(SampleEntity entity) {
-        LocalDate nextBusinessDay = dateHandler.calculateNextBusinessDay();
-        if (nextBusinessDay.isEqual(entity.getDate().toLocalDate())
-                && nextBusinessDay.isAfter(entity.getDate().toLocalDate())) {
-            return Optional.of("The day must be one day past from next business day (monday at friday)");
+        if (!dateHandler.isBusinessDay(entity.getDate().toLocalDate())
+                || entity.getDate().toLocalTime().isBefore(LocalTime.NOON)
+                ||  entity.getDate().toLocalTime().isAfter(LocalTime.of(18, 0))) {
+            return Optional.of("The day must be between monday and friday between 12 and 18 hours of day");
         }
 
         return Optional.empty();

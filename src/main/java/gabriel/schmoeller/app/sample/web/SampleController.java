@@ -43,8 +43,10 @@ public class SampleController {
     }
 
     @PostMapping
-    public void createThings(SampleViewBean viewBean) {
-        service.create(converter.dencode(viewBean));
+    public SampleViewBean createThings(SampleViewBean viewBean) {
+        SampleEntity saved = service.create(converter.dencode(viewBean));
+
+        return converter.encode(saved);
     }
 
     @PutMapping
