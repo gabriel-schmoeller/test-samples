@@ -1,9 +1,11 @@
 package gabriel.schmoeller.app.sample.web;
 
 import gabriel.schmoeller.app.sample.config.SampleConfiguration;
+import gabriel.schmoeller.app.sample.persistence.SampleEntity;
 import gabriel.schmoeller.app.sample.persistence.SampleRepository;
 import gabriel.schmoeller.app.sample.web.domain.SampleViewBean;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,11 @@ public class SampleControllerIT {
     @Autowired
     private SampleRepository repository;
 
+    @Before
+    public void setUp() throws Exception {
+        repository.deleteAll();
+    }
+
     @Test
     public void shouldCreateThings() {
         // given
@@ -54,17 +61,30 @@ public class SampleControllerIT {
     @Test
     public void shouldLoadThings() {
         // given
+        SampleEntity entity = new SampleEntity();
+        entity.setName(NAME);
+        entity.setDate(DATE);
+
+        SampleEntity entity2 = new SampleEntity();
+        entity2.setName(NAME_2);
+        entity2.setDate(DATE_2);
+
+        entity = repository.save(entity);
+        entity2 = repository.save(entity2);
+
         SampleViewBean viewBean = new SampleViewBean();
+        viewBean.setId(entity.getId());
         viewBean.setName(NAME);
         viewBean.setDate(DATE);
 
         SampleViewBean viewBean2 = new SampleViewBean();
+        viewBean2.setId(entity2.getId());
         viewBean2.setName(NAME_2);
         viewBean2.setDate(DATE_2);
 
         List<SampleViewBean> expectedList = new ArrayList<>();
-        expectedList.add(sampleController.createThings(viewBean));
-        expectedList.add(sampleController.createThings(viewBean2));
+        expectedList.add(viewBean);
+        expectedList.add(viewBean2);
 
         // when
         List<SampleViewBean> listOfThings = sampleController.listThings();
